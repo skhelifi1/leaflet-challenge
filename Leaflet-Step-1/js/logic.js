@@ -13,7 +13,7 @@ function createFeatures(earthquake) {
       onEachFeature: onEachFeature,
       style: function(feature) {
         return {
-          color: "white",
+          color: "Green",
           fillColor: chooseColor(new Depth(feature.geometry.coordinates[2])),
           fillOpacity: 0.5,
           weight: 1.5
@@ -21,6 +21,22 @@ function createFeatures(earthquake) {
       }
     });
     createMap(earthquakes);
+  }
+  function chooseColor(Depth) {
+    switch (Depth) {
+    case "Brooklyn":
+      return "yellow";
+    case "Bronx":
+      return "red";
+    case "Manhattan":
+      return "orange";
+    case "Queens":
+      return "green";
+    case "Staten Island":
+      return "purple";
+    default:
+      return "black";
+    }
   }
 function createMap(earthquakes) {
     // Create the tile layer that will be the background of our map
