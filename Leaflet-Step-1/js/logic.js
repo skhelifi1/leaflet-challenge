@@ -14,11 +14,11 @@ var lightmap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{
 var url =  "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_month.geojson";
 
 d3.json(url, function(response) {
-    geojson = L.choropleth(data, {
+    geojson = L.choropleth(response, {
 
       // Define what  property in the features to use
-      valueProperty: "coordinates",
-  
+      valueProperty: "coordinates[2]",
+        
       // Set color scale
       scale: ["#ffffb2", "#b10026"],
   
@@ -38,13 +38,14 @@ d3.json(url, function(response) {
       "</h4><hr><p>" + new Date (feature.properties.time) + "<hr>"+ 
       "Mag:"+ feature.properties.mag + "<hr>" + feature.geometry.coordinates[2] + "</p>");
       
-      }.addTo(myMap);
+      }
+    }).addTo(myMap);
 
     let earthquakes = L.geoJSON(earthquake, {
       onEachFeature: onEachFeature
-    }),
+    });
       // Set up the legend
-    let legend = L.control({ position: "bottomright" }),
+    let legend = L.control({ position: "bottomright" });
     legend.onAdd = function() {
       var div = L.DomUtil.create("div", "info legend");
       var limits = geojson.options.limits;
@@ -66,11 +67,11 @@ d3.json(url, function(response) {
 
       div.innerHTML += "<ul>" + labels.join("") + "</ul>";
       return div;
-
+    }
     // Adding legend to the map
     legend.addTo(myMap);
     //createMap(earthquakes);
-    }
+});
   
 //function createMap(earthquakes) {
     // Create the tile layer that will be the background of our map
@@ -81,10 +82,7 @@ d3.json(url, function(response) {
       // var overlayMap = {
       //   Earthquakes: earthquakes
       // };
-      
-      
 
-}
   
    
 
