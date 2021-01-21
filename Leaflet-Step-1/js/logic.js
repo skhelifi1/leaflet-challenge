@@ -1,15 +1,21 @@
 // Creating map object
-var myMap = L.map("mapid", {
+var myMap = L.map("map", {
   center: [40.7128, -74.0059],
-  zoom: 11,
+  zoom: 3,
 });
 
-var lightmap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
-        attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
-        maxZoom: 18,
-        id: "light-v10",
-        accessToken: API_KEY
-}).addTo(myMap);
+var lightmap = L.tileLayer(
+  "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
+  {
+    attribution:
+      "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
+    tileSize: 512,
+    maxZoom: 18,
+    zoomOffset: -1,
+    id: "mapbox/light-v10",
+    accessToken: API_KEY
+  }
+).addTo(myMap);
 
 var url =  "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_month.geojson";
 
@@ -41,9 +47,9 @@ d3.json(url, function(response) {
       }
     }).addTo(myMap);
 
-    let earthquakes = L.geoJSON(earthquake, {
-      onEachFeature: onEachFeature
-    });
+    // let earthquakes = L.geoJSON(earthquake, {
+    //   onEachFeature: onEachFeature
+    // });
       // Set up the legend
     let legend = L.control({ position: "bottomright" });
     legend.onAdd = function() {
@@ -70,7 +76,6 @@ d3.json(url, function(response) {
     }
     // Adding legend to the map
     legend.addTo(myMap);
-    //createMap(earthquakes);
 });
   
 //function createMap(earthquakes) {
