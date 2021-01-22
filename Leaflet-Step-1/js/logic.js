@@ -1,7 +1,7 @@
 // Creating map object
 var myMap = L.map("map", {
   center: [40.7128, -74.0059],
-  zoom: 3,
+  zoom: 2,
 });
 
 var lightmap = L.tileLayer(
@@ -20,32 +20,64 @@ var lightmap = L.tileLayer(
 var url =  "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_month.geojson";
 
 d3.json(url, function(response) {
-    geojson = L.choropleth(response, {
-
-      // Define what  property in the features to use
-      valueProperty: "coordinates[2]",
-        
-      // Set color scale
-      scale: ["#ffffb2", "#b10026"],
-  
-      // Number of breaks in step range
-      steps: 6,
-  
-      // q for quartile, e for equidistant, k for k-means
-      mode: "q",
-      style: {
-        // Border color
-        color: "#fff",
-        weight: 1,
-        fillOpacity: 0.8
-      },
-      onEachFeature: function(feature, layer) {
-      layer.bindPopup("<h4>" + feature.properties.place + 
-      "</h4><hr><p>" + new Date (feature.properties.time) + "<hr>"+ 
-      "Mag:"+ feature.properties.mag + "<hr>" + feature.geometry.coordinates[2] + "</p>");
+  console.log(response)
+  function style(feature) { 
+    return    {
+      color: "#fff",
+      weight: 1,
+      fillOpacity: 0.8,
+      fillColor: getColor(feature.geometry.coordinates[2])
+    }
+  }
+  function getColor(depth) {
+    return d > 1000 ? '#800026' :
+           d > 500  ? '#BD0026' :
+           d > 200  ? '#E31A1C' :
+           d > 100  ? '#FC4E2A' :
+           d > 50   ? '#FD8D3C' :
+           d > 20   ? '#FEB24C' :
+           d > 10   ? '#FED976' :
+                      '#FFEDA0';     
       
-      }
-    }).addTo(myMap);
+    
+  }  
+  geojson = L.geoJSON(response, {
+      
+    style: style,
+    
+    onEachFeature: function(feature, layer) {
+    layer.bindPopup("<h4>" + feature.properties.place + 
+    "</h4><hr><p>" + new Date (feature.properties.time) + "<hr>"+ 
+    "Mag:"+ feature.properties.mag + "<hr>" + feature.geometry.coordinates[2] + "</p>");
+    
+    }
+  }).addTo(myMap); 
+  // geojson = L.choropleth(response, {
+      
+  //     // Define what  property in the features to use
+  //     valueProperty: "coordinates[2]",
+        
+  //     // Set color scale
+  //     scale: ["#ffffb2", "#b10026"],
+  
+  //     // Number of breaks in step range
+  //     steps: 6,
+  
+  //     // q for quartile, e for equidistant, k for k-means
+  //     mode: "q",
+  //     style: {
+  //       // Border color
+  //       color: "#fff",
+  //       weight: 1,
+  //       fillOpacity: 0.8
+  //     },
+  //     onEachFeature: function(feature, layer) {
+  //     layer.bindPopup("<h4>" + feature.properties.place + 
+  //     "</h4><hr><p>" + new Date (feature.properties.time) + "<hr>"+ 
+  //     "Mag:"+ feature.properties.mag + "<hr>" + feature.geometry.coordinates[2] + "</p>");
+      
+  //     }
+  //   }).addTo(myMap);
 
     // let earthquakes = L.geoJSON(earthquake, {
     //   onEachFeature: onEachFeature
