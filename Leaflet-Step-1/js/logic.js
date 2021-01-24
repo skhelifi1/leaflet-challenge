@@ -20,30 +20,109 @@ var lightmap = L.tileLayer(
 var url =  "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_month.geojson";
 
 d3.json(url, function(response) {
+  
   //console.log(response)
+  // var location = response.properties.place;
+  //console.log(location)
   function style(feature) { 
     return    {
       color: "#fff",
       weight: 1,
       fillOpacity: 0.8,
-      fillColor: getColor(feature.geometry.coordinates[2])
+      //fillColor: getColor(feature.geometry.coordinates[2])
     }
   }
   function getColor(depth) {
-    return d > 200 ? '#800026' :
-           d > 100  ? '#BD0026' :
-           d > 14  ? '#E31A1C' :
-           d > 9  ? '#FC4E2A' :
-           d > 8   ? '#FD8D3C' :
-           d > 5   ? '#FEB24C' :
-           d > 4   ? '#FED976' :
-                      '#FFEDA0';     
-      
-    
+    return depth > 200 ? '#800026' :
+           depth > 100  ? '#BD0026' :
+           depth> 14  ? '#E31A1C' :
+           depth> 9  ? '#FC4E2A' :
+           depth> 8   ? '#FD8D3C' :
+           depth > 5   ? '#FEB24C' :
+           depth > 4   ? '#FED976' :
+                         '#FFEDA0';     
+       
   }  
+  
+
   geojson = L.geoJSON(response, {
       
     style: style,
+
+    pointToLayer: function(feature, location) {
+      if (feature.properties.mag >=200)
+        return L.circleMarker(location, {
+            radius:100,
+            opacity: .5,
+            //color: "#000",
+            color:getColor(feature.geometry.coordinates[2]),
+            fillColor: getColor(feature.geometry.coordinates[2]),
+            fillOpacity: 0.8
+        }).bindTooltip( {permanent: false, direction: "top", className: "my-labels"}).openTooltip(); 
+           else if (feature.properties.mag >=100)
+           return L.circleMarker(location, {
+            radius:60,
+            opacity: .5,
+            //color: "#000",
+            color:getColor(feature.geometry.coordinates[2]),
+            fillColor: getColor(feature.geometry.coordinates[2]),
+            fillOpacity: 0.8
+         }).bindTooltip( {permanent: false, direction: "top", className: "my-labels"}).openTooltip(); 
+            else if (feature.properties.mag >=14)
+            return L.circleMarker(location, {
+            radius:45,
+            opacity: .5,
+            //color: "#000",
+            color: getColor(feature.geometry.coordinates[2]),
+            fillColor: getColor(feature.geometry.coordinates[2]),
+            fillOpacity: 0.8
+          }).bindTooltip( {permanent: false, direction: "top", className: "my-labels"}).openTooltip(); 
+            else if (feature.properties.mag >=9)
+            return L.circleMarker(location, {
+            radius:30,
+            opacity: .5,
+            //color: "#000",
+            color: getColor(feature.geometry.coordinates[2]),
+            fillColor: getColor(feature.geometry.coordinates[2]),
+            fillOpacity: 0.8
+          }).bindTooltip( {permanent: false, direction: "top", className: "my-labels"}).openTooltip();
+            else if (feature.properties.mag >=8)
+            return L.circleMarker(location, {
+            radius:25,
+            opacity: .5,
+            //color: "#000",
+            color: getColor(feature.geometry.coordinates[2]),
+            fillColor: getColor(feature.geometry.coordinates[2]),
+            fillOpacity: 0.8
+          }).bindTooltip( {permanent: false, direction: "top", className: "my-labels"}).openTooltip();
+            else if (feature.properties.mag >=5)
+            return L.circleMarker(location, {
+            radius:15,
+            opacity: .5,
+            //color: "#000",
+            color: getColor(feature.geometry.coordinates[2]),
+            fillColor: getColor(feature.geometry.coordinates[2]),
+            fillOpacity: 0.8
+          }).bindTooltip( {permanent: false, direction: "top", className: "my-labels"}).openTooltip();
+            else if (feature.properties.mag >=2)
+            return L.circleMarker(location, {
+            radius:8,
+            opacity: .5,
+            //color: "#000",
+            color: getColor(feature.geometry.coordinates[2]),
+            fillColor: getColor(feature.geometry.coordinates[2]),
+            fillOpacity: 0.8
+          }).bindTooltip( {permanent: false, direction: "top", className: "my-labels"}).openTooltip();
+            else if (feature.properties.mag === "")
+            return L.circleMarker(location, {
+            radius:2,
+            //opacity: .5,
+            //color: "#000",
+            color: getColor(feature.geometry.coordinates[2]),
+            fillColor: getColor(feature.geometry.coordinates[2]),
+            fillOpacity: 0.6,
+        }).bindTooltip(label, {permanent: false, direction: "top", className: "my-labels"}).openTooltip(); 
+    },  
     
     onEachFeature: function(feature, layer) {
     layer.bindPopup("<h4>" + feature.properties.place + 
