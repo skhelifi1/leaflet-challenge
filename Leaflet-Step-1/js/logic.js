@@ -39,7 +39,7 @@ d3.json(url, function(response) {
            depth> 9  ? '#FC4E2A' :
            depth> 8   ? '#FD8D3C' :
            depth > 5   ? '#FEB24C' :
-           depth > 4   ? '#FED976' :
+           depth > 2   ? '#FED976' :
                          '#FFEDA0';     
        
   }  
@@ -52,7 +52,7 @@ d3.json(url, function(response) {
     pointToLayer: function(feature, location) {
       if (feature.properties.mag >=200)
         return L.circleMarker(location, {
-            radius:100,
+            radius:500,
             opacity: .5,
             //color: "#000",
             color:getColor(feature.geometry.coordinates[2]),
@@ -61,7 +61,7 @@ d3.json(url, function(response) {
         }).bindTooltip( {permanent: false, direction: "top", className: "my-labels"}).openTooltip(); 
            else if (feature.properties.mag >=100)
            return L.circleMarker(location, {
-            radius:60,
+            radius:250,
             opacity: .5,
             //color: "#000",
             color:getColor(feature.geometry.coordinates[2]),
@@ -70,7 +70,7 @@ d3.json(url, function(response) {
          }).bindTooltip( {permanent: false, direction: "top", className: "my-labels"}).openTooltip(); 
             else if (feature.properties.mag >=14)
             return L.circleMarker(location, {
-            radius:45,
+            radius:120,
             opacity: .5,
             //color: "#000",
             color: getColor(feature.geometry.coordinates[2]),
@@ -79,7 +79,7 @@ d3.json(url, function(response) {
           }).bindTooltip( {permanent: false, direction: "top", className: "my-labels"}).openTooltip(); 
             else if (feature.properties.mag >=9)
             return L.circleMarker(location, {
-            radius:30,
+            radius:90,
             opacity: .5,
             //color: "#000",
             color: getColor(feature.geometry.coordinates[2]),
@@ -88,7 +88,7 @@ d3.json(url, function(response) {
           }).bindTooltip( {permanent: false, direction: "top", className: "my-labels"}).openTooltip();
             else if (feature.properties.mag >=8)
             return L.circleMarker(location, {
-            radius:25,
+            radius:50,
             opacity: .5,
             //color: "#000",
             color: getColor(feature.geometry.coordinates[2]),
@@ -97,7 +97,7 @@ d3.json(url, function(response) {
           }).bindTooltip( {permanent: false, direction: "top", className: "my-labels"}).openTooltip();
             else if (feature.properties.mag >=5)
             return L.circleMarker(location, {
-            radius:15,
+            radius:30,
             opacity: .5,
             //color: "#000",
             color: getColor(feature.geometry.coordinates[2]),
@@ -106,7 +106,7 @@ d3.json(url, function(response) {
           }).bindTooltip( {permanent: false, direction: "top", className: "my-labels"}).openTooltip();
             else if (feature.properties.mag >=2)
             return L.circleMarker(location, {
-            radius:8,
+            radius:10,
             opacity: .5,
             //color: "#000",
             color: getColor(feature.geometry.coordinates[2]),
@@ -131,55 +131,26 @@ d3.json(url, function(response) {
     
     }
   }).addTo(myMap); 
-  // geojson = L.choropleth(response, {
-      
-  //     // Define what  property in the features to use
-  //     valueProperty: "coordinates[2]",
-        
-  //     // Set color scale
-  //     scale: ["#ffffb2", "#b10026"],
   
-  //     // Number of breaks in step range
-  //     steps: 6,
-  
-  //     // q for quartile, e for equidistant, k for k-means
-  //     mode: "q",
-  //     style: {
-  //       // Border color
-  //       color: "#fff",
-  //       weight: 1,
-  //       fillOpacity: 0.8
-  //     },
-  //     onEachFeature: function(feature, layer) {
-  //     layer.bindPopup("<h4>" + feature.properties.place + 
-  //     "</h4><hr><p>" + new Date (feature.properties.time) + "<hr>"+ 
-  //     "Mag:"+ feature.properties.mag + "<hr>" + feature.geometry.coordinates[2] + "</p>");
-      
-  //     }
-  //   }).addTo(myMap);
-
-    // let earthquakes = L.geoJSON(earthquake, {
-    //   onEachFeature: onEachFeature
-    // });
       // Set up the legend
     let legend = L.control({ position: "bottomright" });
-    legend.onAdd = function() {
-      var div = L.DomUtil.create("div", "info legend");
-      var limits = geojson.options.limits;
-      var colors = geojson.options.colors;
+    legend.onAdd = function(myMap) {
+      var div = L.DomUtil.create("div", "legend");
+      var categories = [200,100,14,9,8,5,2];
+      // var colors = geojson.fillColor;
       var labels = [];
 
-      // Add min & max
-      var legendInfo = "<h1>Earthquake Depth</h1>" +
-        "<div class=\"labels\">" +
-          "<div class=\"min\">" + limits[0] + "</div>" +
-          "<div class=\"max\">" + limits[limits.length - 1] + "</div>" +
-        "</div>";
+      
+      var legendInfo = "<h4>Earthquake Depth</h4>"; 
+        // "<div class=\"labels\">" +
+          // "<div class=\"categories\">" + categories + "</div>" +
+          // "<div class=\"max\">" + limits[limits.length - 1] + "</div>" +
+        // "</div>";
 
       div.innerHTML = legendInfo;
 
-      limits.forEach(function(limit, index) {
-        labels.push("<li style=\"background-color: " + colors[index] + "\"></li>");
+      categories.forEach(category => {
+        labels.push("<li style=\"background-color: " + getColor(category) + "\"></li>");
       });
 
       div.innerHTML += "<ul>" + labels.join("") + "</ul>";
@@ -188,26 +159,4 @@ d3.json(url, function(response) {
     // Adding legend to the map
     legend.addTo(myMap);
 });
-  
-//function createMap(earthquakes) {
-    // Create the tile layer that will be the background of our map
-      
-      // var baseMap = {
-      //   "Light Map": lightmap,
-      // };
-      // var overlayMap = {
-      //   Earthquakes: earthquakes
-      // };
 
-  
-   
-
-    //     // Set the data location property to a variable
-    //     var location = response[i].geometry.coordinates[0];
-    //     console.log(location)
-    // };
-      
-    //  var mag = response.map(data => data.features.properties);
-    //  console.log(mag)
-     
-    // var depth = response.geometry.coordinates[2]; 
