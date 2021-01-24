@@ -20,7 +20,7 @@ var lightmap = L.tileLayer(
 var url =  "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_month.geojson";
 
 d3.json(url, function(response) {
-  console.log(response)
+  //console.log(response)
   function style(feature) { 
     return    {
       color: "#fff",
@@ -30,13 +30,13 @@ d3.json(url, function(response) {
     }
   }
   function getColor(depth) {
-    return d > 1000 ? '#800026' :
-           d > 500  ? '#BD0026' :
-           d > 200  ? '#E31A1C' :
-           d > 100  ? '#FC4E2A' :
-           d > 50   ? '#FD8D3C' :
-           d > 20   ? '#FEB24C' :
-           d > 10   ? '#FED976' :
+    return d > 200 ? '#800026' :
+           d > 100  ? '#BD0026' :
+           d > 14  ? '#E31A1C' :
+           d > 9  ? '#FC4E2A' :
+           d > 8   ? '#FD8D3C' :
+           d > 5   ? '#FEB24C' :
+           d > 4   ? '#FED976' :
                       '#FFEDA0';     
       
     
@@ -48,7 +48,7 @@ d3.json(url, function(response) {
     onEachFeature: function(feature, layer) {
     layer.bindPopup("<h4>" + feature.properties.place + 
     "</h4><hr><p>" + new Date (feature.properties.time) + "<hr>"+ 
-    "Mag:"+ feature.properties.mag + "<hr>" + feature.geometry.coordinates[2] + "</p>");
+    "Magnitude:" + feature.properties.mag + "<hr>" + "Depth:" + feature.geometry.coordinates[2] + "</p>");
     
     }
   }).addTo(myMap); 
